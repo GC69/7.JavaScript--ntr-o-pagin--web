@@ -253,4 +253,4 @@ function displayProducts() {
   });
 }
 
-displayProducts();
+// displayProducts();
