@@ -3,6 +3,21 @@
   padding: 0;
 }
 
+section {
+  background-color: rgb(200, 224, 233);
+}
+
+section div,
+div.expensiveProduct,
+div.cheapestProduct {
+  width: 25%;
+  margin: 10px;
+  border-radius: 10px;
+  box-shadow: rgb(153, 65, 225) 2px 2px;
+  text-align: center;
+  background-color: rgb(210, 198, 30);
+}
+
 h1 {
   text-align: center;
 }
@@ -14,6 +29,6 @@ button {
   border: red solid 1px;
   border-radius: 5px;
   color: rgb(246, 248, 250);
-  background: linear-gradient(to bottom right, #00ffc8b2, #ad1bda);
+  background: linear-gradient(to bottom right, #00ccffb2, #ad1bda);
   justify-content: center;
 }

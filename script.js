@@ -253,4 +253,100 @@ function displayProducts() {
   });
 }
 
+function findExpensiveProduct() {
+  let expensiveProduct = products[0];
+
+  products.forEach(function (product) {
+    if (product.price > expensiveProduct.price) {
+      expensiveProduct = product;
+    }
+  });
+  return expensiveProduct;
+}
+
+function displayExpensiveProduct() {
+  expensiveProduct = findExpensiveProduct();
+
+  const expensiveProductInfo = document.createElement("div");
+  expensiveProductInfo.className = "expensiveProduct";
+  const info = document.createElement("h4");
+  info.innerHTML = "Expensive Product is: ";
+  const title = document.createElement("h3");
+  title.innerHTML = expensiveProduct.name;
+  const category = document.createElement("p");
+  category.innerHTML = expensiveProduct.category;
+  const currency = document.createElement("p");
+  const price = document.createElement("p");
+  price.innerHTML = expensiveProduct.price + " " + expensiveProduct.currency;
+  const nameCountry = document.createElement("p");
+  const codeCountry = document.createElement("p");
+  nameCountry.innerHTML =
+    expensiveProduct.originCountry.name +
+    ": " +
+    expensiveProduct.originCountry.code;
+  const stockAmount = document.createElement("p");
+  stockAmount.innerHTML = expensiveProduct.inStock;
+  const buy = document.createElement("button");
+  buy.innerHTML = "Buy";
+
+  expensiveProductInfo.appendChild(info);
+  expensiveProductInfo.appendChild(title);
+  expensiveProductInfo.appendChild(category);
+  expensiveProductInfo.appendChild(nameCountry);
+  expensiveProductInfo.appendChild(price);
+  expensiveProductInfo.appendChild(stockAmount);
+  expensiveProductInfo.appendChild(buy);
+
+  document.body.appendChild(expensiveProductInfo);
+}
+
+function findCheapestProduct() {
+  let cheapestProduct = products[0];
+
+  products.forEach(function (product) {
+    if (product.price < cheapestProduct.price) {
+      cheapestProduct = product;
+    }
+  });
+  return cheapestProduct;
+}
+
+function displayCheapestProduct() {
+  cheapestProduct = findCheapestProduct();
+
+  const cheapestProductInfo = document.createElement("div");
+  cheapestProductInfo.className = "cheapestProduct";
+  const info = document.createElement("h4");
+  info.innerHTML = "Cheapest Product is: ";
+  const title = document.createElement("h3");
+  title.innerHTML = cheapestProduct.name;
+  const category = document.createElement("p");
+  category.innerHTML = cheapestProduct.category;
+  const currency = document.createElement("p");
+  const price = document.createElement("p");
+  price.innerHTML = cheapestProduct.price + " " + cheapestProduct.currency;
+  const nameCountry = document.createElement("p");
+  const codeCountry = document.createElement("p");
+  nameCountry.innerHTML =
+    cheapestProduct.originCountry.name +
+    ": " +
+    cheapestProduct.originCountry.code;
+  const stockAmount = document.createElement("p");
+  stockAmount.innerHTML = cheapestProduct.inStock;
+  const buy = document.createElement("button");
+  buy.innerHTML = "Buy";
+
+  cheapestProductInfo.appendChild(info);
+  cheapestProductInfo.appendChild(title);
+  cheapestProductInfo.appendChild(category);
+  cheapestProductInfo.appendChild(nameCountry);
+  cheapestProductInfo.appendChild(price);
+  cheapestProductInfo.appendChild(stockAmount);
+  cheapestProductInfo.appendChild(buy);
+
+  document.body.appendChild(cheapestProductInfo);
+}
+
+// displayExpensiveProduct();
+
 // displayProducts();
