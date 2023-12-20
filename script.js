@@ -8,6 +8,7 @@ function checkStock(product) {
 const products = [
   {
     name: "Numele 1",
+
     category: "Categoria 1",
     price: 299.99,
     originCountry: {
@@ -31,7 +32,7 @@ const products = [
     category: "Categoria 4",
     price: 969.99,
     originCountry: {
-      name: "Ukrain",
+      name: "Ukraine",
       code: "UKR",
     },
     inStock: 3,
@@ -166,6 +167,7 @@ function findRangeProduct(minValue, maxValue) {
 const products = [
   {
     name: "Numele 1",
+    description: "Description 1",
     category: "Categoria 1",
     price: 299.99,
     currency: "MDL",
@@ -177,6 +179,7 @@ const products = [
   },
   {
     name: "Numele 2",
+    description: "Description 2",
     category: "Categoria 2",
     price: 639.99,
     currency: "RON",
@@ -188,6 +191,7 @@ const products = [
   },
   {
     name: "Numele 3",
+    description: "Description 3",
     category: "Categoria 4",
     price: 969.99,
     currency: "USD",
@@ -199,6 +203,7 @@ const products = [
   },
   {
     name: "Numele 4",
+    description: "Description 4",
     category: "Categoria 3",
     price: 2369.99,
     currency: "MDL",
@@ -210,6 +215,7 @@ const products = [
   },
   {
     name: "Numele 5",
+    description: "Description 5",
     category: "Categoria 1",
     price: 599.99,
     currency: "RON",
@@ -228,22 +234,26 @@ function displayProducts() {
   products.forEach((product) => {
     const card = document.createElement("div");
     const title = document.createElement("h3");
-    title.innerHTML = product.name;
+    const description = document.createElement("p");
     const category = document.createElement("p");
-    category.innerHTML = product.category;
     const currency = document.createElement("p");
     const price = document.createElement("p");
-    price.innerHTML = product.price + " " + product.currency;
     const nameCountry = document.createElement("p");
     const codeCountry = document.createElement("p");
+    const stockAmount = document.createElement("p");
+    const buy = document.createElement("button");
+
+    title.innerHTML = product.name;
+    description.innerHTML = product.description;
+    category.innerHTML = product.category;
+    price.innerHTML = product.price + " " + product.currency;
     nameCountry.innerHTML =
       product.originCountry.name + ": " + product.originCountry.code;
-    const stockAmount = document.createElement("p");
     stockAmount.innerHTML = product.inStock;
-    const buy = document.createElement("button");
     buy.innerHTML = "Buy";
 
     card.appendChild(title);
+    card.appendChild(description);
     card.appendChild(category);
     card.appendChild(nameCountry);
     card.appendChild(price);
@@ -251,6 +261,134 @@ function displayProducts() {
     card.appendChild(buy);
     section.appendChild(card);
   });
+}
+
+function addNewProduct(product) {
+  const index = products.findIndex((item) => item.name === product.name);
+
+  console.log("Index:", index);
+  if (index === -1) {
+    console.log("Adding new product:", product);
+    products.push(product); //add new product in the list
+  } else {
+    products[index].inStock += product.inStock;
+  }
+  return products[index] || products;
+}
+
+function displayNewProduct() {
+  const form = document.createElement("form");
+
+  // create input elements for the new product
+  const productNameInput = document.createElement("input");
+  productNameInput.type = "text";
+  productNameInput.placeholder = "New Product name";
+
+  const productCategoryInput = document.createElement("input");
+  productCategoryInput.type = "text";
+  productCategoryInput.placeholder = "New Product category";
+
+  const productPriceInput = document.createElement("input");
+  productPriceInput.type = "number";
+  productPriceInput.placeholder = "Product price";
+
+  const stockAmountInput = document.createElement("input");
+  stockAmountInput.type = "number";
+  stockAmountInput.placeholder = "Stock amount";
+
+  // create the select element for the product countries
+  const countrySelect = document.createElement("select");
+  const countryOptions = ["Rep.Moldova", "România", "Ukraine"];
+  countryOptions.forEach((country) => {
+    const option = document.createElement("option");
+    option.value = country;
+    option.text = country;
+    countrySelect.appendChild(option);
+  });
+
+  // create the select element for the country code
+  const codeCountrySelect = document.createElement("select");
+  const codeCountryOptions = ["MD", "RO", "UKR"];
+  codeCountryOptions.forEach(function (code) {
+    const option = document.createElement("option");
+    option.value = code;
+    option.text = code;
+    codeCountrySelect.appendChild(option);
+  });
+  // create the select element for the currencies
+  const currencySelect = document.createElement("select");
+  const currencyOptions = ["MDL", "RON", "EURO", "USD"];
+  currencyOptions.forEach((currency) => {
+    const option = document.createElement("option");
+    option.value = currency;
+    option.text = currency;
+    currencySelect.appendChild(option);
+  });
+
+  // add submit button
+  const submitButton = document.createElement("button");
+  submitButton.type = "button";
+  submitButton.innerHTML = "Add Product";
+
+  // add click event on submit button
+  submitButton.addEventListener("click", function () {
+    const newProduct = addNewProduct({
+      name: productNameInput.value,
+      category: productCategoryInput.value,
+      price: parseFloat(productPriceInput.value),
+      currency: currencySelect.value,
+      originCountry: {
+        name: countrySelect.value,
+        code: codeCountrySelect.value,
+      },
+      inStock: parseInt(stockAmountInput.value),
+    });
+
+    form.remove();
+
+    // create card for the new product
+    const newProductCard = document.createElement("div");
+    const title = document.createElement("h3");
+    title.innerHTML = newProduct.name;
+    const category = document.createElement("p");
+    category.innerHTML = newProduct.category;
+    const currency = document.createElement("p");
+    const price = document.createElement("p");
+    price.innerHTML = newProduct.price + " " + newProduct.currency;
+    const nameCountry = document.createElement("p");
+    const codeCountry = document.createElement("p");
+    nameCountry.innerHTML =
+      newProduct.originCountry.name + ": " + newProduct.originCountry.code;
+    const stockAmount = document.createElement("p");
+    stockAmount.innerHTML = newProduct.inStock;
+    const buy = document.createElement("button");
+    buy.innerHTML = "Buy";
+
+    newProductCard.appendChild(title);
+    newProductCard.appendChild(category);
+    newProductCard.appendChild(nameCountry);
+    newProductCard.appendChild(price);
+    newProductCard.appendChild(stockAmount);
+    newProductCard.appendChild(buy);
+
+    // append the new product card to the section
+    const section = document.querySelector("#productSection");
+    section.appendChild(newProductCard);
+  });
+
+  // add elements to the form
+  form.appendChild(productNameInput);
+  form.appendChild(productCategoryInput);
+  form.appendChild(productPriceInput);
+  form.appendChild(countrySelect);
+  form.appendChild(codeCountrySelect);
+  form.appendChild(currencySelect);
+  form.appendChild(stockAmountInput);
+  form.appendChild(submitButton);
+
+  // add form to the section
+  const section = document.querySelector("#productSection");
+  section.appendChild(form);
 }
 
 function findExpensiveProduct() {
@@ -265,12 +403,15 @@ function findExpensiveProduct() {
 }
 
 function displayExpensiveProduct() {
-  expensiveProduct = findExpensiveProduct();
+  let expensiveProduct = findExpensiveProduct();
 
+  const section = document.querySelector("#productSection");
   const expensiveProductInfo = document.createElement("div");
   expensiveProductInfo.className = "expensiveProduct";
+
   const info = document.createElement("h4");
   info.innerHTML = "Expensive Product is: ";
+
   const title = document.createElement("h3");
   title.innerHTML = expensiveProduct.name;
   const category = document.createElement("p");
@@ -297,7 +438,7 @@ function displayExpensiveProduct() {
   expensiveProductInfo.appendChild(stockAmount);
   expensiveProductInfo.appendChild(buy);
 
-  document.body.appendChild(expensiveProductInfo);
+  section.appendChild(expensiveProductInfo);
 }
 
 function findCheapestProduct() {
@@ -312,10 +453,12 @@ function findCheapestProduct() {
 }
 
 function displayCheapestProduct() {
-  cheapestProduct = findCheapestProduct();
+  let cheapestProduct = findCheapestProduct();
 
+  const section = document.querySelector("#productSection");
   const cheapestProductInfo = document.createElement("div");
   cheapestProductInfo.className = "cheapestProduct";
+
   const info = document.createElement("h4");
   info.innerHTML = "Cheapest Product is: ";
   const title = document.createElement("h3");
@@ -344,9 +487,14 @@ function displayCheapestProduct() {
   cheapestProductInfo.appendChild(stockAmount);
   cheapestProductInfo.appendChild(buy);
 
-  document.body.appendChild(cheapestProductInfo);
+  // cheapestProductInfo.appendChild(divContainer);
+
+  section.appendChild(cheapestProductInfo);
 }
 
-// displayExpensiveProduct();
+function resetFilters() {
+  const section = document.querySelector("#productSection");
 
-// displayProducts();
+  section.innerHTML = "";
+  displayProducts();
+}

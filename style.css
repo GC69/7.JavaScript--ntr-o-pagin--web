@@ -3,8 +3,21 @@
   padding: 0;
 }
 
+h1 {
+  text-align: center;
+}
+
+h4 {
+  margin-bottom: 10px;
+}
+
 section {
   background-color: rgb(200, 224, 233);
+}
+
+section div {
+  position: relative;
+
 }
 
 section div,
@@ -18,9 +31,13 @@ div.cheapestProduct {
   background-color: rgb(210, 198, 30);
 }
 
-h1 {
-  text-align: center;
+div.expensiveProduct,
+div.cheapestProduct {
+  position: absolute;
+  top: 95px;
+  right: 0;
 }
+
 
 button {
   padding: 10px;
