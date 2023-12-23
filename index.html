@@ -11,8 +11,13 @@
     <h1>JavaScript într-o pagină web</h1>
     <hr />
 
-    <button onclick="displayProducts()">Show all products</button>
+    <button
+      onclick="displayProducts(document.getElementById('productSection'), products)"
+    >
+      Show all products
+    </button>
     <button onclick="displayNewProduct()">Add new product</button>
+    <button onclick="showProductsByProperty()">Filter by property</button>
     <button onclick="displayCheapestProduct()">Cheapest product</button>
     <button onclick="displayExpensiveProduct()">Expensive product</button>
     <button onclick="resetFilters()">Reset filter</button>

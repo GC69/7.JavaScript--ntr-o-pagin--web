@@ -15,14 +15,9 @@ section {
   background-color: rgb(200, 224, 233);
 }
 
-section div {
-  position: relative;
-
-}
-
-section div,
 div.expensiveProduct,
-div.cheapestProduct {
+div.cheapestProduct,
+#productSection div {
   width: 25%;
   margin: 10px;
   border-radius: 10px;
@@ -30,14 +25,6 @@ div.cheapestProduct {
   text-align: center;
   background-color: rgb(210, 198, 30);
 }
-
-div.expensiveProduct,
-div.cheapestProduct {
-  position: absolute;
-  top: 95px;
-  right: 0;
-}
-
 
 button {
   padding: 10px;
