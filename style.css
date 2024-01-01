@@ -36,3 +36,30 @@ button {
   background: linear-gradient(to bottom right, #00ccffb2, #ad1bda);
   justify-content: center;
 }
+
+form {
+  width: 25%;
+  margin: 10px;
+  border-radius: 10px;
+  box-shadow: rgb(153, 65, 225) 2px 2px;
+  text-align: center;
+  background-color: rgb(210, 198, 30);
+}
+
+form textarea {
+  max-width: 90%;
+}
+
+form input,
+textarea {
+  margin-top: 5px;
+  width: 90%;
+  padding: 2px;
+}
+
+form select,
+form button {
+  margin-top: 10px;
+  padding: 8px;
+  border-radius: 5px;
+}

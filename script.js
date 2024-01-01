@@ -1,51 +1,4 @@
-/*
-
-// Posibilitatea de a lua produse din depozit.
-function removeProduct(name) {
-  const indexToRemove = products.findIndex(function (product) {
-    return product.name === name;
-  });
-
-  if (indexToRemove !== -1) {
-    if (products[indexToRemove].inStock > 1) {
-      products[indexToRemove].inStock = products[indexToRemove].inStock - 1;
-
-      return products[indexToRemove];
-    } else {
-      return products.splice(indexToRemove, 1)[0];
-    }
-  }
-  return null;
-}
-
-// Posibilitatea de a filtra produsele după categorie.
-function filterByCategory(categoryFilter) {
-  return products.filter(function (product) {
-    return product.category === categoryFilter;
-  });
-}
-
-// Posibilitatea de a filtra produsele după țara de origine.
-function filteredByCountry(countryFilter) {
-  return products.filter(function (product) {
-    return product.originCountry.name === countryFilter;
-  });
-}
-
-// Să se găsească produsele cu prețul între o limită indicată
-function findRangeProduct(minValue, maxValue) {
-  const foundProducts = [];
-
-  products.forEach(function (product) {
-    if (product.price > minValue && product.price < maxValue) {
-      foundProducts.push(product);
-    }
-  });
-
-  return foundProducts;
-}
-*/
-
+// Product list
 const products = [
   {
     name: "Numele 1",
@@ -120,6 +73,9 @@ function displayProductsDetails(container, product) {
   const stockAmount = document.createElement("p");
   const buy = document.createElement("button");
 
+  const editButton = document.createElement("button");
+  const deleteButton = document.createElement("button");
+
   title.innerHTML = product.name;
   description.innerHTML = product.description;
   category.innerHTML = product.category;
@@ -128,6 +84,20 @@ function displayProductsDetails(container, product) {
     product.originCountry.name + ": " + product.originCountry.code;
   stockAmount.innerHTML = product.inStock;
   buy.innerHTML = "Buy";
+  editButton.innerHTML = "Edit";
+  editButton.setAttribute("product-id", product.name);
+  deleteButton.innerHTML = "Delete";
+
+  // add event on click "edit" button
+  editButton.addEventListener("click", function () {
+    const productId = this.getAttribute("product-id");
+    editProduct(productId);
+  });
+
+  // add event on click "delete" button
+  deleteButton.addEventListener("click", function () {
+    deleteProduct(product);
+  });
 
   container.appendChild(title);
   container.appendChild(description);
@@ -136,13 +106,15 @@ function displayProductsDetails(container, product) {
   container.appendChild(price);
   container.appendChild(stockAmount);
   container.appendChild(buy);
+
+  container.appendChild(editButton);
+  container.appendChild(deleteButton);
 }
 
 function displayProducts(container, products) {
   const section = document.querySelector("#productSection");
   section.innerHTML = "";
 
-  console.log("Container:", container, "Products:", products);
   products.forEach((product) => {
     const card = document.createElement("div");
 
@@ -154,6 +126,65 @@ function displayProducts(container, products) {
   });
 }
 
+function editProduct(id) {
+  const container = document.getElementById(`productSection`);
+  const product = products.find((p) => p.name === id);
+
+  if (product) {
+    const newName = prompt("Enter new name: ", product.name);
+    const newDescription = prompt(
+      "Enter new description: ",
+      product.description
+    );
+    const newCategory = prompt("Enter new category: ", product.category);
+    const newPrice = prompt("Enter new price: ", product.price);
+    const newCurrency = prompt("Enter new currency:", product.currency);
+    const newOriginCountryName = prompt(
+      "Enter new origin country name: ",
+      product.originCountry.name
+    );
+    const newOriginCountryCode = prompt(
+      "Enter new origin country code:",
+      product.originCountry.code
+    );
+    const newInStock = prompt("Enter new stock amount: ", product.inStock);
+
+    product.name = newName;
+    product.description = newDescription;
+    product.category = newCategory;
+    product.price = parseFloat(newPrice);
+    product.currency = newCurrency;
+    product.originCountry.name = newOriginCountryName;
+    product.originCountry.code = newOriginCountryCode;
+    product.inStock = parseInt(newInStock);
+
+    // display the updated product
+    displayProducts(container, [product]);
+    displayProducts(container, products);
+  }
+
+  return product;
+}
+
+function deleteProduct(product) {
+  const isConfirmed = window.confirm(
+    `Are you sure you want to delete this product: ${product.name}?`
+  );
+  if (isConfirmed) {
+    const indexToRemove = products.findIndex(function (p) {
+      return p.name === product.name;
+    });
+    if (indexToRemove !== -1) {
+      products.splice(indexToRemove, 1);
+      console.log(`Deleted product: ${product.name}`);
+
+      displayProducts(document.getElementById("productSection"), products);
+    }
+  } else {
+    console.log("Deletion cancelled");
+  }
+}
+
 function createProductForm() {
   const form = document.createElement("form");
 
@@ -162,8 +193,8 @@ function createProductForm() {
   productNameInput.type = "text";
   productNameInput.placeholder = "Product name";
 
-  const productDescriptionInput = document.createElement("input");
-  productDescriptionInput.type = "text";
+  const productDescriptionInput = document.createElement("textarea");
+  // productDescriptionInput.type = "text";
   productDescriptionInput.placeholder = "Product Description";
 
   const productCategoryInput = document.createElement("input");
@@ -276,14 +307,15 @@ function addNewProduct(product) {
     );
   });
 
-  console.log("Index:", index);
   if (index === -1) {
     console.log("Adding new product:", product);
     products.push(product); //add new product in the list
   } else {
-    console.log("Product already exists.Updating quantity");
+    console.log("Product already exists. Updating quantity");
     products[index].inStock += product.inStock;
   }
+
+  displayProducts(document.getElementById("productSection"), products);
 
   console.log(products);
   return products;
@@ -403,9 +435,108 @@ function showProductsByProperty() {
   section.appendChild(filterButton);
 }
 
+function findRangeProduct(minValue, maxValue) {
+  return products.filter(function (product) {
+    return product.price >= minValue && product.price <= maxValue;
+  });
+}
+
+function showRangeProducts() {
+  const section = document.querySelector("#productSection");
+  section.innerHTML = "";
+
+  const maxPrice = Math.ceil(
+    Math.max(...products.map((product) => product.price))
+  );
+
+  // Create min range input
+  const minRangeInput = document.createElement("input");
+  minRangeInput.type = "range";
+  minRangeInput.min = 0;
+  minRangeInput.max = maxPrice;
+  minRangeInput.step = 1;
+  minRangeInput.value = 0;
+
+  // Create max range input
+  const maxRangeInput = document.createElement("input");
+  maxRangeInput.type = "range";
+  maxRangeInput.min = 0;
+  maxRangeInput.max = maxPrice;
+  maxRangeInput.step = 1;
+  maxRangeInput.value = maxPrice;
+
+  // Add event listener to update minRangeInput, maxRangeInput values
+  minRangeInput.addEventListener("input", function () {
+    minRangeValue.textContent =
+      "Min Price: " + minRangeInput.value + " " + products[0].currency;
+
+    // Update max attribute of maxRangeInput based on the new value of minRangeInput
+    maxRangeInput.max = maxPrice;
+    maxRangeInput.min = parseFloat(minRangeInput.value);
+
+    // Ensure that max value doesn't exceed maxPrice
+    if (parseFloat(maxRangeInput.value) > maxPrice) {
+      maxRangeInput.value = maxPrice;
+      maxRangeValue.textContent =
+        "Max Price: " + maxRangeInput.value + " " + products[0].currency;
+    }
+  });
+
+  maxRangeInput.addEventListener("input", function () {
+    maxRangeValue.textContent =
+      "Max Price: " + maxRangeInput.value + " " + products[0].currency;
+
+    // Update min attribute of minRangeInput based on the new value of maxRangeInput
+    minRangeInput.min = 0;
+    minRangeInput.max = parseFloat(maxRangeInput.value);
+
+    // Ensure that min value doesn't exceed maxPrice
+    if (parseFloat(minRangeInput.value) > maxPrice) {
+      minRangeInput.value = maxPrice;
+      minRangeValue.textContent =
+        "Min Price: " + minRangeInput.value + " " + products[0].currency;
+    }
+  });
+
+  // Create range value span for min range input
+  const minRangeValue = document.createElement("span");
+  minRangeValue.textContent =
+    "Min Price: " + minRangeInput.value + " " + products[0].currency;
+
+  // Create range value span for max range input
+  const maxRangeValue = document.createElement("span");
+  maxRangeValue.textContent =
+    "Max Price: " + maxRangeInput.value + " " + products[0].currency;
+
+  // Add filter button
+  const filterButton = document.createElement("button");
+  filterButton.innerHTML = "Filter by Price Range";
+
+  // Add event listener for filter button
+  filterButton.addEventListener("click", function () {
+    const minValue = parseFloat(minRangeInput.value);
+    const maxValue = parseFloat(maxRangeInput.value);
+
+    const filteredProducts = findRangeProduct(minValue, maxValue);
+
+    // Show products after filtering
+    if (filteredProducts.length > 0) {
+      displayProducts(section, filteredProducts);
+    } else {
+      section.innerHTML = "No products found in the specified price range.";
+    }
+  });
+
+  // Append elements to section
+  section.appendChild(minRangeInput);
+  section.appendChild(minRangeValue);
+  section.appendChild(maxRangeInput);
+  section.appendChild(maxRangeValue);
+  section.appendChild(filterButton);
+}
+
 function resetFilters() {
   const section = document.querySelector("#productSection");
 
-  section.innerHTML = "";
-  // displayProducts();
+  displayProducts(section, products);
 }
